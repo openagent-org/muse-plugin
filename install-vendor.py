@@ -2,17 +2,66 @@
 """Muse 安装阶段补齐官方 COS SDK 压缩归档；业务上传不调用此工具。"""
 
 import argparse
+import errno
 import gzip
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
 import re
+import socket
+import ssl
 import tempfile
+import urllib.error
+import urllib.parse
 import urllib.request
 
 
 BASE_URL = "https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz"
+FALLBACK_URL = "https://gitee.com/openagent-org/muse-plugin/raw/rel/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz"
+
+
+class ArchiveRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """仅允许 Gitee Raw 向官方 CDN 同路径跳转一次，跟随前核验。"""
+
+    def redirect_request(self, request, response, code, message, headers, new_url):
+        target = urllib.parse.urlsplit(new_url)
+        if (request.full_url != FALLBACK_URL
+                or target.scheme != "https" or target.netloc != "raw.giteeusercontent.com"
+                or target.path != urllib.parse.urlsplit(FALLBACK_URL).path or target.fragment
+                or "\\" in new_url or any(ord(char) <= 32 or ord(char) == 127 for char in new_url)):
+            raise ValueError("COS SDK 归档下载地址发生不受信任的跳转")
+        return super().redirect_request(request, response, code, message, headers, new_url)
+
+
+def is_network_failure(error: Exception) -> bool:
+    """只对连接、传输及 5xx 失败换源；认证、证书和本地错误不重试。"""
+    if isinstance(error, urllib.error.HTTPError):
+        return 500 <= error.code <= 599
+    if isinstance(error, urllib.error.URLError):
+        error = error.reason
+    if isinstance(error, ssl.SSLEOFError):
+        return True
+    if isinstance(error, ssl.SSLError):
+        return False
+    return (isinstance(error, (TimeoutError, socket.timeout, ConnectionError, socket.gaierror, http.client.IncompleteRead))
+            or isinstance(error, OSError) and error.errno in {errno.ENETUNREACH, errno.EHOSTUNREACH})
+
+
+def download_archive(url: str) -> bytes:
+    opener = urllib.request.build_opener(ArchiveRedirectHandler())
+    with opener.open(url, timeout=30) as response:
+        return response.read()
+
+
+def download_with_fallback() -> bytes:
+    try:
+        return download_archive(BASE_URL)
+    except (OSError, http.client.HTTPException) as error:
+        if not is_network_failure(error):
+            raise
+    return download_archive(FALLBACK_URL)
 
 
 def write_file(path: Path, data: bytes) -> None:
@@ -68,10 +117,7 @@ def install_vendor(scripts: Path) -> int:
     if target.is_file() and hashlib.sha256(target.read_bytes()).hexdigest() == digest:
         verify_archive(target.read_bytes(), archive)
         return 1
-    with urllib.request.urlopen(BASE_URL, timeout=30) as response:
-        if response.geturl() != BASE_URL:
-            raise ValueError("COS SDK 归档下载地址发生跳转")
-        data = response.read()
+    data = download_with_fallback()
     verify_archive(data, archive)
     write_file(target, data)
     return 1
@@ -90,5 +136,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except (OSError, ValueError, TypeError) as error:
+    except (OSError, ValueError, TypeError, http.client.HTTPException) as error:
         raise SystemExit(f"COS SDK 归档安装未完成：{error}") from None
