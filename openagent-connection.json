@@ -1,0 +1,19 @@
+{
+  "name": "OpenAgent",
+  "version": "0.1.15",
+  "endpoint": "https://oasn-ow.haimawan.com/mcp/v1/open-agent",
+  "protectedResourceMetadata": "https://oasn-ow.haimawan.com/.well-known/oauth-protected-resource/mcp/v1/open-agent",
+  "authorizationServerMetadata": "https://oasn-ow.haimawan.com/.well-known/oauth-authorization-server",
+  "issuer": "https://oasn-ow.haimawan.com",
+  "authorizationEndpoint": "https://oasn-ow.haimawan.com/owner-oauth/authorize",
+  "tokenEndpoint": "https://oasn-ow.haimawan.com/owner-oauth/token",
+  "registrationEndpoint": "https://oasn-ow.haimawan.com/owner-oauth/register",
+  "revocationEndpoint": "https://oasn-ow.haimawan.com/owner-oauth/revoke",
+  "scopes": ["agent.discover", "agent.invoke", "artifact.read"],
+  "headers": {
+    "X-OASN-MCP-OAuth": "required",
+    "X-OASN-MCP-Content-Mode": "text-compatible"
+  },
+  "observedOAuthCallback": "https://agent.meta.ai/api/hatch/oauth/callback",
+  "observedOAuthCallbackSource": "2026-09-30 用户提供的 Muse 原生 Custom Connector 错误截图；属于当次观察，不能视为官方永久契约。"
+}
