@@ -6,20 +6,20 @@ When the user requests installation, carry out the steps below without asking ag
 
 ## 1. Read the installation materials online
 
-Download all ten core files below in full from the official website. The installation script retrieves the compressed COS SDK archive according to the lockfile, so the user does not need to upload attachments or archives. If any file cannot be read or is incomplete, stop and report the issue.
+Download all ten core files below in full from the `rel` branch of the official `openagent-org/muse-plugin` GitHub repository. The installation script retrieves the compressed COS SDK archive according to the lockfile, so the user does not need to upload attachments or archives. If any file cannot be read or is incomplete, stop and report the issue.
 
-| Material | Official download URL |
+| Material | GitHub rel download URL |
 | --- | --- |
-| Connection configuration | [openagent-connection.json](https://oasn-ow.haimawan.com/install-assets/muse/openagent-connection.json) |
-| Task routing | [openagent-first-task-router/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-first-task-router/SKILL.md) |
-| Result delivery reference | [result-validation-and-delivery.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-first-task-router/references/result-validation-and-delivery.md) |
-| Usage guidance | [openagent-guide-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-guide-agent/SKILL.md) |
-| Find an Agent | [openagent-search-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-search-agent/SKILL.md) |
-| Run an Agent | [openagent-run-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/SKILL.md) |
-| COS upload script | [openagent-run-agent/scripts/cos_upload.cjs](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/scripts/cos_upload.cjs) |
-| COS dependency lockfile | [openagent-run-agent/scripts/cos_sdk.lock.json](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/scripts/cos_sdk.lock.json) |
-| COS SDK archive installation script | [install-vendor.py](https://oasn-ow.haimawan.com/install-assets/muse/install-vendor.py) |
-| Account queries | [openagent-query-account/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-query-account/SKILL.md) |
+| Connection configuration | [openagent-connection.json](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/openagent-connection.json) |
+| Task routing | [openagent-first-task-router/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-first-task-router/SKILL.md) |
+| Result delivery reference | [result-validation-and-delivery.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-first-task-router/references/result-validation-and-delivery.md) |
+| Usage guidance | [openagent-guide-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-guide-agent/SKILL.md) |
+| Find an Agent | [openagent-search-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-search-agent/SKILL.md) |
+| Run an Agent | [openagent-run-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/SKILL.md) |
+| COS upload script | [openagent-run-agent/scripts/cos_upload.cjs](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_upload.cjs) |
+| COS dependency lockfile | [openagent-run-agent/scripts/cos_sdk.lock.json](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.lock.json) |
+| COS SDK archive installation script | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
+| Account queries | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
 Use only the fixed HTTPS URLs in the table. Preserve the complete original JSON. Do not save an HTML login or error page, incomplete content, or a Skill without a name or description as a skill; if usable content is unavailable, stop and report the issue. Each of the five Skill names must match its directory name; the connection endpoint must be `https://oasn-ow.haimawan.com/mcp/v1/open-agent`.
 
@@ -54,7 +54,7 @@ After saving the execution Skill in step 2 of this section, run the downloaded `
 python3 -I -S '<actual absolute path to install-vendor.py>' --scripts-dir '<actual absolute path to openagent-run-agent/scripts>'
 ```
 
-The installation script downloads the archive only from the fixed official website path `install-assets/muse/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz`. It verifies the SHA-256 and size of the compressed archive and decompressed bundle against the lockfile before writing atomically. It reuses identical existing content and preserves the extracted cache and other files. The script must return `SDK_ARCHIVE_READY` before Skill installation can pass acceptance. Run this script only during installation or updates; task uploads do not call it. The extracted cache is written only on the first upload. During updates, preserve unverified old Python scripts and archives instead of deleting them by filename.
+The installation script downloads the archive only from the fixed GitHub `rel` URL `https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz`. It verifies the SHA-256 and size of the compressed archive and decompressed bundle against the lockfile before writing atomically. It reuses identical existing content and preserves the extracted cache and other files. The script must return `SDK_ARCHIVE_READY` before Skill installation can pass acceptance. Run this script only during installation or updates; task uploads do not call it. The extracted cache is written only on the first upload. During updates, preserve unverified old Python scripts and archives instead of deleting them by filename.
 
 If no persistent skill entry point can be confirmed, explicitly report "MCP connected; persistent Skill installation incomplete." Do not claim that the Skills will automatically take effect in future conversations.
 

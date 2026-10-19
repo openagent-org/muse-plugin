@@ -1,6 +1,6 @@
 {
   "name": "OpenAgent",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "endpoint": "https://oasn-ow.haimawan.com/mcp/v1/open-agent",
   "protectedResourceMetadata": "https://oasn-ow.haimawan.com/.well-known/oauth-protected-resource/mcp/v1/open-agent",
   "authorizationServerMetadata": "https://oasn-ow.haimawan.com/.well-known/oauth-authorization-server",

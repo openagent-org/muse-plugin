@@ -6,20 +6,20 @@
 
 ## 1. 在线读取安装资料
 
-从官网完整下载以下十份核心文件，COS SDK 压缩归档由安装脚本按锁定清单自动补齐，无需用户上传附件或压缩包。任一文件无法读取或内容不完整时，停止并报告。
+从官方 GitHub 仓库 `openagent-org/muse-plugin` 的 `rel` 分支完整下载以下十份核心文件，COS SDK 压缩归档由安装脚本按锁定清单自动补齐，无需用户上传附件或压缩包。任一文件无法读取或内容不完整时，停止并报告。
 
-| 资料 | 官网下载地址 |
+| 资料 | GitHub rel 下载地址 |
 | --- | --- |
-| 连接配置 | [openagent-connection.json](https://oasn-ow.haimawan.com/install-assets/muse/openagent-connection.json) |
-| 任务路由 | [openagent-first-task-router/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-first-task-router/SKILL.md) |
-| 结果交付引用 | [result-validation-and-delivery.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-first-task-router/references/result-validation-and-delivery.md) |
-| 使用引导 | [openagent-guide-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-guide-agent/SKILL.md) |
-| 查找 Agent | [openagent-search-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-search-agent/SKILL.md) |
-| 执行 Agent | [openagent-run-agent/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/SKILL.md) |
-| COS 上传脚本 | [openagent-run-agent/scripts/cos_upload.cjs](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/scripts/cos_upload.cjs) |
-| COS 依赖锁定清单 | [openagent-run-agent/scripts/cos_sdk.lock.json](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/scripts/cos_sdk.lock.json) |
-| COS SDK 归档安装脚本 | [install-vendor.py](https://oasn-ow.haimawan.com/install-assets/muse/install-vendor.py) |
-| 查询账户 | [openagent-query-account/SKILL.md](https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-query-account/SKILL.md) |
+| 连接配置 | [openagent-connection.json](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/openagent-connection.json) |
+| 任务路由 | [openagent-first-task-router/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-first-task-router/SKILL.md) |
+| 结果交付引用 | [result-validation-and-delivery.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-first-task-router/references/result-validation-and-delivery.md) |
+| 使用引导 | [openagent-guide-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-guide-agent/SKILL.md) |
+| 查找 Agent | [openagent-search-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-search-agent/SKILL.md) |
+| 执行 Agent | [openagent-run-agent/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/SKILL.md) |
+| COS 上传脚本 | [openagent-run-agent/scripts/cos_upload.cjs](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_upload.cjs) |
+| COS 依赖锁定清单 | [openagent-run-agent/scripts/cos_sdk.lock.json](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.lock.json) |
+| COS SDK 归档安装脚本 | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
+| 查询账户 | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
 仅使用表中的固定 HTTPS 地址。JSON 保留完整原始内容。正文为 HTML 登录/错误页、缺少内容或 Skill 的 name/description 时不得保存为技能；没有可用正文就停止并报告。五个 Skill 的 name 必须与各自目录名一致；连接 endpoint 必须为 `https://oasn-ow.haimawan.com/mcp/v1/open-agent`。
 
@@ -54,7 +54,7 @@
 python3 -I -S '<install-vendor.py 的真实绝对路径>' --scripts-dir '<openagent-run-agent/scripts 的真实绝对路径>'
 ```
 
-安装脚本只从固定官网 `install-assets/muse/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz` 下载归档，核对锁定清单中的压缩包与解压后 bundle 的 SHA-256 和大小后原子写入；已有内容相同则复用，保留解压缓存及其他文件。必须返回 `SDK_ARCHIVE_READY` 后再完成 Skill 安装验收。此脚本仅在安装或更新时执行，业务上传不调用它；首次上传时才写入解压缓存。更新时保留未核验的旧 Python 脚本和归档，不按文件名删除。
+安装脚本只从固定 GitHub `rel` 地址 `https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz` 下载归档，核对锁定清单中的压缩包与解压后 bundle 的 SHA-256 和大小后原子写入；已有内容相同则复用，保留解压缓存及其他文件。必须返回 `SDK_ARCHIVE_READY` 后再完成 Skill 安装验收。此脚本仅在安装或更新时执行，业务上传不调用它；首次上传时才写入解压缓存。更新时保留未核验的旧 Python 脚本和归档，不按文件名删除。
 
 若没有可确认的持久技能入口，明确报告“MCP 已连接，Skill 持久安装未完成”，不要宣称以后会话自动生效。
 

@@ -12,7 +12,7 @@ import tempfile
 import urllib.request
 
 
-BASE_URL = "https://oasn-ow.haimawan.com/install-assets/muse/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz"
+BASE_URL = "https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-run-agent/scripts/cos_sdk.cjs.gz"
 
 
 def write_file(path: Path, data: bytes) -> None:
