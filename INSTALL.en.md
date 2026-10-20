@@ -8,9 +8,9 @@ When the user requests installation, carry out the steps below without asking ag
 
 Download all ten core files below in full from the official `openagent-org/muse-plugin` repository: prefer `https://github.com/openagent-org/muse-plugin.git`, with `https://gitee.com/openagent-org/muse-plugin.git` as the fallback. The installation script retrieves the compressed COS SDK archive according to the lockfile, so the user does not need to upload attachments or archives.
 
-First resolve `refs/heads/rel` from the preferred repository to a complete 40-character hexadecimal commit SHA and retain it for this installation. The table's `rel` links identify file paths; replace `/rel/` with that SHA before downloading. Only after a DNS, connection, timeout, interrupted-transfer, or HTTP 5xx failure, confirm that the original request has ended and switch sources once without asking the user to choose a network region. If the preferred source fails this way before resolving a SHA, the fallback may establish the initial SHA. Once established, download only the same SHA and relative path from the fallback; do not resolve another `rel` or mix versions. The Gitee download pattern is `https://gitee.com/openagent-org/muse-plugin/raw/<full-SHA>/<relative-path>`. Stop if the fallback fails; do not switch repeatedly.
+Download directly from the `rel` URLs in the table. Only after a DNS, connection, timeout, interrupted-transfer, or HTTP 5xx failure, confirm that the original request has ended and switch sources once without asking the user to choose a network region. Keep the same repository, `rel` branch, and relative path when switching; the Gitee download pattern is `https://gitee.com/openagent-org/muse-plugin/raw/rel/<relative-path>`. Stop if the fallback fails; do not switch repeatedly.
 
-Do not switch sources for denied permission or approval, certificate errors, HTTP 401/403/404/429/451, checksum or content validation failures, syntax errors, or installation errors; stop and report them. Reject GitHub redirects. Gitee Raw may redirect once to HTTPS `raw.giteeusercontent.com` only after verifying that the repository, SHA, and file path are unchanged. Preserve only the signed query returned by the official server; do not construct or rewrite it.
+Do not switch sources for denied permission or approval, certificate errors, HTTP 401/403/404/429/451, checksum or content validation failures, syntax errors, or installation errors; stop and report them. Reject GitHub redirects. Gitee Raw may redirect once to HTTPS `raw.giteeusercontent.com` only after verifying that the repository, `rel` branch, and file path are unchanged. Preserve only the signed query returned by the official server; do not construct or rewrite it.
 
 | Material | GitHub rel download URL |
 | --- | --- |
@@ -25,7 +25,7 @@ Do not switch sources for denied permission or approval, certificate errors, HTT
 | COS SDK archive installation script | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
 | Account queries | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
-Use only these two official sources with the fixed SHA and relative paths from the table. Preserve the complete original JSON. Do not save an HTML login or error page, incomplete content, or a Skill without a name or description as a skill; if usable content is unavailable, stop and report the issue. Each of the five Skill names must match its directory name; the connection endpoint must be `https://oasn-ow.haimawan.com/mcp/v1/open-agent`.
+Use only the `rel` branch of these two official sources and the relative paths from the table. Preserve the complete original JSON. Do not save an HTML login or error page, incomplete content, or a Skill without a name or description as a skill; if usable content is unavailable, stop and report the issue. Each of the five Skill names must match its directory name; the connection endpoint must be `https://oasn-ow.haimawan.com/mcp/v1/open-agent`.
 
 ## 2. Connect MCP and authorize access
 

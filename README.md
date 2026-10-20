@@ -10,7 +10,7 @@ Share the official installation guide with Muse and ask it to follow the instruc
 - [Chinese guide](https://oasn-ow.haimawan.com/zh-CN/muse)
 - Repository copies: [English](INSTALL.en.md) · [Chinese](INSTALL.md)
 
-Muse downloads the connection settings, Skills, and supporting files from one fixed `rel` commit, preferring GitHub and switching to the official Gitee mirror once only for network failures. Follow the guide to authorize the connection and verify the installed Skills. Existing installations use the same guide for updates.
+Muse downloads the connection settings, Skills, and supporting files directly from the `rel` branch, preferring GitHub and switching to the official Gitee mirror once only for network failures. Follow the guide to authorize the connection and verify the installed Skills. Existing installations use the same guide for updates.
 
 File uploads require Node.js 20+. The COS SDK is bundled with the installation assets; no package installation is required.
 

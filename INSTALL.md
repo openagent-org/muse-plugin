@@ -8,9 +8,9 @@
 
 从官方 `openagent-org/muse-plugin` 仓库完整下载以下十份核心文件：首选 `https://github.com/openagent-org/muse-plugin.git`，备用 `https://gitee.com/openagent-org/muse-plugin.git`。COS SDK 压缩归档由安装脚本按锁定清单自动补齐，无需用户上传附件或压缩包。
 
-先读取首选仓库 `refs/heads/rel` 的完整 40 位十六进制提交 SHA，并在本次安装固定使用它。表中的 `rel` 链接用于标明文件路径，实际下载时必须把 `/rel/` 替换为这个 SHA。仅在 DNS、连接、超时、传输中断或 HTTP 5xx 错误时，确认原请求已结束后自动换源一次，不让用户选择网络区域；若首源在解析 SHA 前出现这些错误，可由备用仓库解析初始 SHA。SHA 一旦确定，换源只能读取同一 SHA、同一相对路径，不重新解析另一个 `rel` 或混合版本。Gitee 下载地址为 `https://gitee.com/openagent-org/muse-plugin/raw/<完整SHA>/<相对路径>`。备用源失败即停止，不循环换源。
+直接使用下表中的 `rel` 地址下载。仅在 DNS、连接、超时、传输中断或 HTTP 5xx 错误时，确认原请求已结束后自动换源一次，不让用户选择网络区域。换源时保持相同仓库、`rel` 分支和相对路径；Gitee 下载地址为 `https://gitee.com/openagent-org/muse-plugin/raw/rel/<相对路径>`。备用源失败即停止，不循环换源。
 
-权限或审批拒绝、证书错误、HTTP 401/403/404/429/451、摘要或内容校验失败、语法和安装错误都不换源，停止并报告。GitHub 下载不接受跳转；Gitee Raw 只允许一次跳转到 HTTPS `raw.giteeusercontent.com`，跟随前必须核对仓库、SHA 和文件路径完全不变，只接受官方返回的签名查询参数，不自行拼接或改写。
+权限或审批拒绝、证书错误、HTTP 401/403/404/429/451、摘要或内容校验失败、语法和安装错误都不换源，停止并报告。GitHub 下载不接受跳转；Gitee Raw 只允许一次跳转到 HTTPS `raw.giteeusercontent.com`，跟随前必须核对仓库、`rel` 分支和文件路径完全不变，只接受官方返回的签名查询参数，不自行拼接或改写。
 
 | 资料 | GitHub rel 下载地址 |
 | --- | --- |
@@ -25,7 +25,7 @@
 | COS SDK 归档安装脚本 | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
 | 查询账户 | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
-仅使用上述两个官方来源，按固定 SHA 和表中相对路径下载。JSON 保留完整原始内容。正文为 HTML 登录/错误页、缺少内容或 Skill 的 name/description 时不得保存为技能；没有可用正文就停止并报告。五个 Skill 的 name 必须与各自目录名一致；连接 endpoint 必须为 `https://oasn-ow.haimawan.com/mcp/v1/open-agent`。
+仅使用上述两个官方来源的 `rel` 分支，按表中相对路径下载。JSON 保留完整原始内容。正文为 HTML 登录/错误页、缺少内容或 Skill 的 name/description 时不得保存为技能；没有可用正文就停止并报告。五个 Skill 的 name 必须与各自目录名一致；连接 endpoint 必须为 `https://oasn-ow.haimawan.com/mcp/v1/open-agent`。
 
 ## 2. 连接 MCP 并授权
 
