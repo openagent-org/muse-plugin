@@ -48,7 +48,7 @@
 ## 4. 安装五个 Skills
 
 1. 读取 Muse 当前提供的持久技能管理说明，确认真实保存和加载入口，不猜测技能目录或注册命令。
-2. 分别安装五份完整 SKILL.md，保留 name、description、正文和同级目录关系；将交付引用保存在路由 Skill 的 `references/result-validation-and-delivery.md`，将 COS Node.js 脚本和依赖锁定清单分别保存在执行 Skill 的 `scripts/cos_upload.cjs`、`scripts/cos_sdk.lock.json`，两者保持同一目录。固定版本 COS Node.js SDK 及其依赖以 `scripts/cos_sdk.cjs.gz` 分发，通过下方安装脚本补齐该归档。业务上传要求 Node.js 20+；首次上传时先校验压缩包与解压后 bundle 的 SHA-256 和大小，再解压至可写的 `scripts/.cos-sdk/<归档 SHA-256>/`；后续进程校验并复用该目录，损坏时从归档重建，保留其他版本缓存。上传不搜索宿主 SDK 或 `node_modules`，不运行 `npm install`，不下载依赖。归档缺失、校验失败或缓存不可写时停止并修复插件安装。使用已验证连接的真实工具名；不能合并为一个 Skill、只保存摘要或丢弃引用、脚本、锁定清单及压缩归档。
+2. 分别安装五份完整 SKILL.md，保留 name、description、正文和同级目录关系；将交付引用保存在路由 Skill 的 `references/result-validation-and-delivery.md`，将 COS Node.js 脚本和依赖锁定清单分别保存在执行 Skill 的 `scripts/cos_upload.cjs`、`scripts/cos_sdk.lock.json`，两者保持同一目录。固定版本 COS Node.js SDK 及其依赖以 `scripts/cos_sdk.cjs.gz` 分发，通过下方安装脚本补齐该归档。业务上传要求 Node.js 20+；首次上传时先校验压缩包与解压后 bundle 的 SHA-256 和大小，再解压至可写的 `scripts/.cos-sdk/node_modules/<归档 SHA-256>/`；后续进程校验并复用该目录，损坏时从归档重建，保留其他版本缓存。上传不搜索宿主 SDK 或 `node_modules`，不运行 `npm install`，不下载依赖。归档缺失、校验失败或缓存不可写时停止并修复插件安装。使用已验证连接的真实工具名；不能合并为一个 Skill、只保存摘要或丢弃引用、脚本、锁定清单及压缩归档。
 3. 已有本来源同名 Skill 时就地更新，保留现有 `scripts/.cos-sdk/` 缓存；同名内容来自其他来源时停止覆盖。保存后逐一回读并加载，核对来源和完整内容，确认路由 Skill 能读取交付引用并转交其他四个 Skills。下载文件、当前对话阅读或普通记忆都不算持久安装。
 4. 五个新 Skills 验证成功后，才通过真实技能管理入口停用或移除本来源旧的单个 `openagent` Skill。无法确认来源或无法停用时报告状态，保留其他技能、MCP 连接器和用户文件。
 
