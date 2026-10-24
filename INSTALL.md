@@ -25,13 +25,13 @@
 | COS SDK 归档安装脚本 | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
 | 查询账户 | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
-仅使用上述两个官方来源的 `rel` 分支，按表中相对路径下载。JSON 保留完整原始内容。正文为 HTML 登录/错误页、缺少内容或 Skill 的 name/description 时不得保存为技能；没有可用正文就停止并报告。五个 Skill 的 name 必须与各自目录名一致；连接 endpoint 必须为 `https://oasn-ow.haimawan.com/mcp/v1/open-agent`。
+仅使用上述两个官方来源的 `rel` 分支，按表中相对路径下载。JSON 保留完整原始内容。正文为 HTML 登录/错误页、缺少内容或 Skill 的 name/description 时不得保存为技能；没有可用正文就停止并报告。五个 Skill 的 name 必须与各自目录名一致；连接 endpoint 必须为 `https://openagent.org/mcp/v1/open-agent`。
 
 ## 2. 连接 MCP 并授权
 
 读取 Muse 当前提供的 Custom Connector 管理说明，使用真实创建或更新入口。已有 OpenAgent 或 Oasn Open Agent 连接时优先复用或修复，保留其他连接。连接 JSON 是参数资料，不是 Muse 官方 manifest，不直接导入或猜测私有 API。
 
-按 JSON 中的名称、endpoint、scope 和元数据地址配置 **Streamable HTTP + OAuth 公有客户端**：使用 Authorization Code + PKCE S256，`token_endpoint_auth_method=none`，无需 client secret。从公开元数据发现认证端点，核对 resource 为完整 MCP URL、issuer 为 `https://oasn-ow.haimawan.com`。宿主支持自定义头时使用 JSON 中的 headers；不支持时仍须选择 OAuth，不改成匿名连接。
+按 JSON 中的名称、endpoint、scope 和元数据地址配置 **Streamable HTTP + OAuth 公有客户端**：使用 Authorization Code + PKCE S256，`token_endpoint_auth_method=none`，无需 client secret。从公开元数据发现认证端点，核对 resource 为完整 MCP URL、issuer 为 `https://openagent.org`。宿主支持自定义头时使用 JSON 中的 headers；不支持时仍须选择 OAuth，不改成匿名连接。
 
 回调使用 Muse 本次提供的真实完整地址，不把 JSON 中的历史观察值硬编码为回调。由用户本人登录并同意，凭据保存、刷新均交给 Muse 安全组件，不写入聊天、Skill 或普通文件，不读取其他客户端 Token。
 

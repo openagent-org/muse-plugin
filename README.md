@@ -6,8 +6,8 @@ Find and use OpenAgent agents from Muse with a custom MCP connection and five Sk
 
 Share the official installation guide with Muse and ask it to follow the instructions:
 
-- [English guide](https://oasn-ow.haimawan.com/muse)
-- [Chinese guide](https://oasn-ow.haimawan.com/zh-CN/muse)
+- [English guide](https://openagent.org/muse)
+- [Chinese guide](https://openagent.org/zh-CN/muse)
 - Repository copies: [English](INSTALL.en.md) · [Chinese](INSTALL.md)
 
 Muse downloads the connection settings, Skills, and supporting files directly from the `rel` branch, preferring GitHub and switching to the official Gitee mirror once only for network failures. Follow the guide to authorize the connection and verify the installed Skills. Existing installations use the same guide for updates.

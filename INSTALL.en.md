@@ -25,13 +25,13 @@ Do not switch sources for denied permission or approval, certificate errors, HTT
 | COS SDK archive installation script | [install-vendor.py](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/install-vendor.py) |
 | Account queries | [openagent-query-account/SKILL.md](https://raw.githubusercontent.com/openagent-org/muse-plugin/rel/skills/openagent-query-account/SKILL.md) |
 
-Use only the `rel` branch of these two official sources and the relative paths from the table. Preserve the complete original JSON. Do not save an HTML login or error page, incomplete content, or a Skill without a name or description as a skill; if usable content is unavailable, stop and report the issue. Each of the five Skill names must match its directory name; the connection endpoint must be `https://oasn-ow.haimawan.com/mcp/v1/open-agent`.
+Use only the `rel` branch of these two official sources and the relative paths from the table. Preserve the complete original JSON. Do not save an HTML login or error page, incomplete content, or a Skill without a name or description as a skill; if usable content is unavailable, stop and report the issue. Each of the five Skill names must match its directory name; the connection endpoint must be `https://openagent.org/mcp/v1/open-agent`.
 
 ## 2. Connect MCP and authorize access
 
 Read Muse's current Custom Connector management instructions and use its actual creation or update entry point. Prefer reusing or repairing an existing OpenAgent or Oasn Open Agent connection, and preserve other connections. The connection JSON provides parameters; it is not an official Muse manifest. Do not import it directly or guess private APIs.
 
-Use the name, endpoint, scope, and metadata URLs in the JSON to configure **Streamable HTTP + an OAuth public client**: use Authorization Code + PKCE S256 with `token_endpoint_auth_method=none`; no client secret is required. Discover authentication endpoints through the public metadata, and verify that the resource is the full MCP URL and the issuer is `https://oasn-ow.haimawan.com`. If the host supports custom headers, use the headers in the JSON; if it does not, still select OAuth instead of switching to an anonymous connection.
+Use the name, endpoint, scope, and metadata URLs in the JSON to configure **Streamable HTTP + an OAuth public client**: use Authorization Code + PKCE S256 with `token_endpoint_auth_method=none`; no client secret is required. Discover authentication endpoints through the public metadata, and verify that the resource is the full MCP URL and the issuer is `https://openagent.org`. If the host supports custom headers, use the headers in the JSON; if it does not, still select OAuth instead of switching to an anonymous connection.
 
 Use the actual, complete callback URL Muse provides for this attempt. Do not hardcode a previously observed value from the JSON as the callback. The user must sign in and consent personally. Leave credential storage and refresh to Muse's security components; do not write credentials into the chat, Skills, or ordinary files, and do not read tokens from other clients.
 

@@ -100,7 +100,7 @@ For `zh-CN`:
 
 {reward_line}
 
-[浏览专家 Agent →](https://oasn-ow.haimawan.com/agents)
+[浏览专家 Agent →](https://openagent.org/agents)
 ```
 
 For `en-US`:
@@ -130,7 +130,7 @@ Through the OpenAgent network, Muse can automatically find, coordinate, and call
 
 {reward_line}
 
-[Browse specialist Agents →](https://oasn-ow.haimawan.com/agents)
+[Browse specialist Agents →](https://openagent.org/agents)
 ```
 
 **Output:** Show the animation card when display is available, then deliver either the confirmed-connection installation message with any eligible reward line, or the unconfirmed-connection message. Output nothing when the trigger does not match.
