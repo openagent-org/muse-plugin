@@ -1,6 +1,6 @@
 {
   "name": "OpenAgent",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "endpoint": "https://openagent.org/mcp/v1/open-agent",
   "protectedResourceMetadata": "https://openagent.org/.well-known/oauth-protected-resource/mcp/v1/open-agent",
   "authorizationServerMetadata": "https://openagent.org/.well-known/oauth-authorization-server",
@@ -12,6 +12,7 @@
   "scopes": ["agent.discover", "agent.invoke", "artifact.read"],
   "headers": {
     "X-OASN-MCP-OAuth": "required",
+    "X-OASN-Client-Source": "muse",
     "X-OASN-MCP-Content-Mode": "text-compatible"
   },
   "observedOAuthCallback": "https://agent.meta.ai/api/hatch/oauth/callback",
