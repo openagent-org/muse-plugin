@@ -20,7 +20,7 @@ Installation, repair, and runtime sign-in share these rules, including when anot
 
 Muse uses synchronous `openagent_run` by default. Do not pass `async`, call result-query or recent-invocation tools absent from the default catalog, or impersonate another client through request headers. While waiting, use only the Host's supported long-running tool calls and continuation capabilities to resume the same call; do not Run again. If the Host cannot continue waiting, times out, disconnects, or cancels waiting, preserve the original arguments, idempotency key, and known service handles, and report that the result is unconfirmed. Without a server terminal state, do not claim completion, failure, or cancellation, or substitute another execution for a query.
 
-Show progress and guidance cards only when Muse is confirmed to support safe rendering. If display is unavailable, use a brief text status and continue the original business workflow; do not run HTML as a script or show raw JSON to the user. Refer to a stop button only when a visible, usable stop component actually exists. Otherwise, call the stop tool only with a trusted `invocation_id`; if none exists, explain that the target cannot be located, without inventing a button.
+Follow Agent Execution for progress display. Render guidance cards only with confirmed safe support; otherwise keep the brief status and continue. Do not execute HTML or show raw JSON. Refer to a stop button only when a visible, usable stop component actually exists. Otherwise, call the stop tool only with a trusted `invocation_id`; if none exists, explain that the target cannot be located, without inventing a button.
 
 ## Purpose
 
@@ -56,7 +56,7 @@ OpenAgent: <stage name> — <brief action phrase>
 
 1. In Request Validation, route by user intent: explicit stop requests enter Task Stopping; discovery or selection alone enters No Explicit Intent; only executable requirements enter Request Preparation.
 2. Request Preparation reuses or obtains Agent information under the rules below, organizes requirements, then prepares parameters and required attachments according to the trusted invocation mode. Do not submit execution when required input is missing or an attachment fails.
-3. Agent Execution waits for `openagent_progress` to return, then calls `openagent_run` once with the same key and locale. Execute this Run even if progress display fails.
+3. Agent Execution selects one progress display and runs the invocation once, following the display and failure rules below.
 4. Pass every returned Tool Result to Result Validation and Delivery for validation. Transport failures without a Tool Result enter Failure Handling directly. Return the complete result to the current caller and end. Do not automatically start subsequent business invocations.
 
 ### Loop Control
@@ -173,11 +173,21 @@ The following `data` and attachment rules apply to ordinary business-parameter m
 
 Input is the complete parameters from Request Preparation. Emit the Agent Execution update before calling the progress and execution tools; describe the current invocation action without claiming that submission has completed. The stable `idempotency_key` must be valid and non-placeholder, and reused for the corresponding `openagent_progress` and `openagent_run`.
 
+Choose one progress display per invocation. Prefer the default MCP Apps card only when the current Host explicitly supports it, omitting `display_mode`. Muse currently lacks this support: pass `display_mode="browser"` to `openagent_progress` only. Do not combine or switch displays for the same invocation.
+
 1. Then call `openagent_progress` with trusted `agent_id` and `agent_name`, and the same `idempotency_key` and `locale` as the Run. Optional display fields must come only from trusted Agent metadata. When only an ID is available without a trusted name, use the original `agent_id` as the display identifier in `agent_name`, without claiming it is the Agent's actual name. Keep the same original ID in `openagent_run.agent_id`.
-2. Wait for the Host MCP Tool Result of `openagent_progress`, then call `openagent_run` once with the same `idempotency_key` and `locale`. Failure or timeout of `openagent_progress` affects only progress display; still perform this one Run.
+2. Await this `openagent_progress` result. On authentication failure, follow Muse Host Boundary and stop. Otherwise, complete Browser Progress below if using browser mode, then call `openagent_run` once with the same `idempotency_key` and `locale`. Still perform this Run after progress failure, timeout, a missing link, or opening failure. Do not repeat progress or wait for page load, a handshake, or Socket readiness.
 3. `openagent_run` is the sole source of truth for Invocation state and business results. A progress-card failure does not change the Run, trigger a business retry, or cancel, roll back, or duplicate the Run.
 4. If the execution request is rejected before creating or recovering an Invocation, preserve the trusted rejection for result validation and failure handling. Do not call Run again in this turn.
 5. After `openagent_run` returns, process the authoritative terminal state and standard content blocks through Result Validation and Delivery.
+
+#### Browser Progress
+
+1. Require `isError=false`; read `structuredContent` or its complete text-compatible JSON. Accept only `view="agent_progress"`, `display_mode="browser"`, the Run's original `idempotency_key`, and a non-empty absolute HTTPS `browser_url`. Preserve `agent`, `status`, and Run arguments; never reconstruct fields from prose or previous results.
+2. Use the original URL only as a navigation argument or the target of a link labeled “Open OpenAgent progress page”, localized to `display_locale`. Do not rewrite it, add authentication parameters, or separately expose or log the URL or its credentials.
+3. Use a confirmed user-visible Muse browser tool with its actual schema to open the original `browser_url` once in a new tab, preserving existing tabs. Do not assume fixed tool names or a side panel.
+
+If the visible capability is unavailable, disconnected, fails, or times out, provide the validated link without reopening or claiming success. Without a valid link, retain the stage update. Do not inspect the page or substitute hidden browsers or shell commands. Keep the page open; selection-page cleanup does not apply. Page failure or closure does not change Invocation state.
 
 **Output:** The authoritative `openagent_run` Tool Result, or an execution state that remains unconfirmed.
 
