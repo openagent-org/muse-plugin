@@ -269,7 +269,7 @@ This applies to every initial invocation, retry, refinement, and Remote Agent sw
 
 Receive the selected Remote Agent and complete invocation data (`data`).
 
-HARD GATE: Generate one stable `idempotency_key` for the invocation only after its exact Prompt block is visible.
+HARD GATE: Generate one stable `idempotency_key` for the invocation only after its exact Prompt block is visible. Read and follow [Agent Execution and Browser Progress](../openagent-run-agent/SKILL.md#agent-execution) for progress display and failure handling. Muse currently uses browser progress; prefer the default card only when the current Host explicitly supports MCP Apps, omitting `display_mode` in that case.
 
 First, call `openagent_progress` as a standalone first-class tool call:
 
@@ -277,11 +277,13 @@ First, call `openagent_progress` as a standalone first-class tool call:
 openagent_progress(
   agent_id=<selected Remote Agent ID>,
   agent_name=<selected Remote Agent name>,
-  idempotency_key=<invocation key>
+  idempotency_key=<invocation key>,
+  locale=<same invocation locale>,
+  display_mode="browser"
 )
 ```
 
-When Muse can safely render the native progress component, display the native result directly. Otherwise, retain the brief status already sent without outputting raw data. After the progress call returns or fails, still submit one `openagent_run` as a separate tool call:
+After `openagent_progress` returns, apply the linked Browser Progress steps in browser mode, or display the native result in MCP Apps mode, before calling Run. On authentication failure, follow Muse Host Boundary and stop. Other display failures do not block execution. Then submit one `openagent_run` as a separate tool call:
 
 ```text
 openagent_run(
@@ -295,7 +297,7 @@ openagent_run(
 
 Rules:
 
-- Call `openagent_progress` first. After receiving the Tool Result or confirming display failure, call `openagent_run` once under the existing business authorization; display failure must not block or replay business execution.
+- Call `openagent_progress` first and complete the linked display steps before `openagent_run`. Do not repeat progress or wait for page load, a handshake, or Socket readiness; display failure must not block or replay business execution.
 - Invoke each tool as a separate first-class tool call; do not batch, wrap, or parallelize them.
 - Use the same stable `idempotency_key` for both calls.
 - When attachments were uploaded, pass every returned `structuredContent.attachment` object in `data` exactly as required by `Send Attachments`.
