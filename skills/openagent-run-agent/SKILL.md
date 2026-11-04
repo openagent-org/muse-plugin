@@ -171,7 +171,7 @@ The following `data` and attachment rules apply to ordinary business-parameter m
 
 ### Agent Execution
 
-Input is the complete parameters from Request Preparation. Emit the Agent Execution update before calling the progress and execution tools; describe the current invocation action without claiming that submission has completed. The stable `idempotency_key` must be valid and non-placeholder, and reused for the corresponding `openagent_progress` and `openagent_run`.
+Input is the complete parameters from Request Preparation. Emit the Agent Execution update before calling the progress and execution tools; describe the current invocation action without claiming that submission has completed. The stable `idempotency_key` must be valid and non-placeholder, and reused for the corresponding `openagent_progress` and `openagent_run`. Do not send a separate prompt preview, fenced code block, or duplicate invocation data; use the progress card or page.
 
 Choose one progress display per invocation. Prefer the default MCP Apps card only when the current Host explicitly supports it, omitting `display_mode`. Muse currently lacks this support: pass `display_mode="browser"` to `openagent_progress` only. Do not combine or switch displays for the same invocation.
 
@@ -195,13 +195,13 @@ If the visible capability is unavailable, disconnected, fails, or times out, pro
 
 ### Result Validation and Delivery
 
-Input is the authoritative Tool Result for the current Invocation. Selection Authorization uses this stage as well. Emit the Result Validation and Delivery update before validation; it does not assert successful execution or usable delivery.
+Input is the authoritative Tool Result for the current Invocation. Selection Authorization uses this stage as well. Unless the trusted status is `cancelled`, emit the Result Validation and Delivery update before validation; it does not assert successful execution or usable delivery.
 
 #### Parsing Order
 
 After `openagent_run` returns, process it in this order:
 
-1. Check `isError` first, before business content.
+1. For trusted `status=cancelled`, only confirm cancellation and end, even with `isError=true`, without failure handling, retries, further tasks, content delivery, or assuming the browser is closed; otherwise check `isError` first.
 2. Save trusted `invocation_id` and optional `agent_session_id` for stopping or continuation with the same Agent. Do not show either handle to the user by default.
 3. For `isError=true`, enter Failure Handling without delivering successful content or automatically retrying. A non-completed or unknown status also enters Failure Handling; do not treat it as successful delivery. Invocation failure semantics come from `structuredContent.error.code` when present; `content[]` is only model-visible compatibility text and must not be parsed for error codes or top-up URLs.
 4. For `isError=false`, require `status=completed`, then deliver `content` in its original array order.
@@ -248,7 +248,7 @@ If `status=completed` but both `content` and `views` are empty, explain only tha
 
 **Output:** Trusted content and views delivered in the original order, or an explanation that no usable business content was returned. Return trusted handles only for internal caller use.
 
-**Next:** On an error or non-completed state, enter `Failure Handling`. Otherwise, deliver the usable result or the no-content explanation to the current caller and end without triggering search, planning, or other business Skills.
+**Next:** End directly for trusted `status=cancelled`; on any other error or non-completed state, enter `Failure Handling`. Otherwise, deliver the usable result or the no-content explanation to the current caller and end without triggering search, planning, or other business Skills.
 
 ### Task Stopping
 
@@ -264,7 +264,7 @@ Emit the Task Stopping update when trusted stop targets are ready and the user's
 
 ### Failure Handling
 
-Input is a trusted error from the current invocation or a required attachment, a public transport error, or an execution state that remains unconfirmed. Emit the Failure Handling update once, then determine and deliver the trusted public outcome. Do not claim a retry is underway without authorization.
+Input excludes trusted `status=cancelled` and is a trusted error from the current invocation or a required attachment, a public transport error, or an execution state that remains unconfirmed. Emit the Failure Handling update once, then determine and deliver the trusted public outcome. Do not claim a retry is underway without authorization.
 
 #### Error Normalization and User Boundaries
 

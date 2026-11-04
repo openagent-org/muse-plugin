@@ -247,29 +247,19 @@ For each file selected during prompt construction:
 
 #### Prompt Display
 
-Before every `Agent Execution`, including retries and refinements, display the following template as a single fenced Markdown code block tagged `text`, preserving the blank line between the label and the prompt body:
-
-```text
-Prompt for <Remote Agent name>：
-
-<exact prompt content passed to openagent_run>
-```
-
-Display the prompt after generation and before calling `openagent_run`. The prompt body below the label must match the prompt actually sent. Apart from the label, show only the outbound prompt content; do not include system instructions, credentials, Remote Agent IDs, idempotency keys, or other invocation metadata.
-
-Display the Prompt code block as a standalone user-visible message in Muse; do not place it in reasoning, tool output, executors, logs, or generated files. Only after that message has been visibly sent may the workflow enter `Agent Execution` or call either `openagent_progress` or `openagent_run`.
+Use the progress card or page for the submitted prompt and attachments; do not send a separate prompt preview, fenced code block, or duplicate invocation data, and do not include system instructions, credentials, Remote Agent IDs, idempotency keys, or other invocation metadata in the conversation.
 
 This applies to every initial invocation, retry, refinement, and Remote Agent switch.
 
 **Output:** Complete invocation data (`data`), including the exact outbound prompt.
 
-**Next:** After the required prompt block has been displayed, pass `data` to `Agent Execution`.
+**Next:** Pass the complete `data` to `Agent Execution`.
 
 ### Agent Execution
 
 Receive the selected Remote Agent and complete invocation data (`data`).
 
-HARD GATE: Generate one stable `idempotency_key` for the invocation only after its exact Prompt block is visible. Read and follow [Agent Execution and Browser Progress](../openagent-run-agent/SKILL.md#agent-execution) for progress display and failure handling. Muse currently uses browser progress; prefer the default card only when the current Host explicitly supports MCP Apps, omitting `display_mode` in that case.
+Generate one stable `idempotency_key` for the prepared invocation. Read and follow [Agent Execution and Browser Progress](../openagent-run-agent/SKILL.md#agent-execution) for progress display and failure handling. Muse currently uses browser progress; prefer the default card only when the current Host explicitly supports MCP Apps, omitting `display_mode` in that case.
 
 First, call `openagent_progress` as a standalone first-class tool call:
 
