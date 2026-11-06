@@ -1,6 +1,6 @@
 {
   "name": "OpenAgent",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "endpoint": "https://openagent.org/mcp/v1/open-agent",
   "protectedResourceMetadata": "https://openagent.org/.well-known/oauth-protected-resource/mcp/v1/open-agent",
   "authorizationServerMetadata": "https://openagent.org/.well-known/oauth-authorization-server",
